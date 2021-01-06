@@ -73,7 +73,7 @@ while True:
             author = message.split()[1].strip()
             if " " + author + " " != username:
                 s.call(['notify-send','Perfect Messenger', message])
-            if sound: pygame.mixer.music.play(0) #and here's sound if it turned on
+                if sound: pygame.mixer.music.play(0) #and here's sound if it turned on
             #it's "cls" for windows, here we'll clear console to everything looks ok
             system('clear')
             for message in messages:
