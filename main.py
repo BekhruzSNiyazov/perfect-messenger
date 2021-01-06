@@ -43,6 +43,16 @@ def get_input_from_the_user():
     while True:
         #now we're asking for message and add user number
         message = input("Type your message:   ")
+        
+        if "(yes)" in message:
+            message = message.replace("(yes)", "👍")
+        if "(y)" in message:
+            message = message.replace("(y)", "👍")
+        if "(no)" in message:
+            message = message.replace("(no)", "👎")
+        else:
+            pass
+
         Smessage = str(datetime.now().time())[:8] + username + message
 
         #it is our data with messages
@@ -68,10 +78,10 @@ while True:
     #if messages came:
     if messages:
         if old_data != messages: #if sth new in messages:
-            #create notification banner
             message = messages[list(messages.keys())[-1]]["Message"]
             author = message.split()[1].strip()
             if " " + author + " " != username:
+                #create notification banner
                 s.call(['notify-send','Perfect Messenger', message])
                 if sound: pygame.mixer.music.play(0) #and here's sound if it turned on
             #it's "cls" for windows, here we'll clear console to everything looks ok
