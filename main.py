@@ -7,7 +7,19 @@ from os import system, name
 from firebase import firebase
 import threading
 import time
- 
+from pygame import mixer
+import pygame
+
+from sys import argv
+
+sound = True
+
+if len(argv) > 1:
+    if argv[1] == "--notification-sound-off":
+        sound = False
+
+mixer.init()
+
 #don't know how to call it but we need these things
 app = Flask(__name__)
 app.secret_key = 'secret_key'
@@ -18,7 +30,7 @@ username = input("Type in your username: ") + ": "
 system("clear")
 
 #thanks to Python code won't work if this line doesn't exist
-result = "SEND MESSAGE\n"
+result = "\nSEND MESSAGE\n"
 
 #we're creating db for our messages
 fb = firebase.FirebaseApplication("https://dbcfv-60641-default-rtdb.europe-west1.firebasedatabase.app/", None)
@@ -41,12 +53,14 @@ def get_input_from_the_user():
 thread = threading.Thread(target=get_input_from_the_user)
 thread.start()
 
+pygame.mixer.music.load("noti2.wav")
 #here's our loop so we'll be able to send messages over and over again
 while True: 
     messages = fb.get(f'dbcfv-60641-default-rtdb/Message/', '')
 
     if messages:
         if old_data != messages:
+            if sound: pygame.mixer.music.play(0)
             #it's "cls" for windows, here we'll clear console to everything looks ok
             system('clear')
             for message in messages:
@@ -54,4 +68,3 @@ while True:
     
             old_data = messages
             print(result)
- 
