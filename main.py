@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
 #doing all needed imports
-from random import randrange
-from os import system, name 
+from os import system
 from firebase import firebase
 import threading
-import time
 from pygame import mixer
-import pygame
 import subprocess as s
 from sys import argv
 from datetime import datetime
@@ -25,6 +22,9 @@ mixer.init()
 
 #we need it to generate number for user
 username = ' ' + input("Type in your username: ") + ": "
+
+while " " in username.strip():
+    username = ' ' + input("Type in your username (you cannot separate words with spaces): ") + ": "
 
 #it's "cls" for windows, here we'll clear console to everything looks ok
 system("clear")
@@ -61,14 +61,15 @@ def get_input_from_the_user():
             message = message.split()
             if len(message) > 3:
                 time_and_username = message[1] + " " + message[2]
-                edited_message = ""
-                for word in message:
-                    if message.index(word) > 2:
-                        edited_message += word + " "
-                for msg in messages:
-                    if messages[msg]["Message"].startswith(time_and_username):
-                        message_id = msg
-                fb.put(f'Message/{message_id}/', 'Message', str(datetime.now().time())[:8] + username + "EDITED " + edited_message)
+                if username.startswith(message[2]):
+                    edited_message = ""
+                    for word in message:
+                        if message.index(word) > 2:
+                            edited_message += word + " "
+                    for msg in messages:
+                        if messages[msg]["Message"].startswith(time_and_username):
+                            message_id = msg
+                    fb.put(f'Message/{message_id}/', 'Message', str(datetime.now().time())[:8] + username + "EDITED " + edited_message)
 
         else:
             Smessage = str(datetime.now().time())[:8] + username + message
@@ -86,7 +87,7 @@ thread = threading.Thread(target=get_input_from_the_user)
 thread.start()
 
 #here's our notification sound (you need to download needed file)
-pygame.mixer.music.load("noti2.wav")
+mixer.music.load("noti2.wav")
 
 #here's our loop so we'll be able to send messages over and over again
 while True: 
@@ -103,7 +104,7 @@ while True:
                 if " " + author + " " != username:
                     #create notification banner
                     s.call(['notify-send','Perfect Messenger', message])
-                    if sound: pygame.mixer.music.play(0) #and here's sound if it turned on
+                    if sound: mixer.music.play(0) #and here's sound if it turned on
                 #it's "cls" for windows, here we'll clear console to everything looks ok
                 system('clear')
                 for message in messages:
