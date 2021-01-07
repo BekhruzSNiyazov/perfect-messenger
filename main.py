@@ -61,7 +61,7 @@ def get_input_from_the_user():
             message = message.split()
             if len(message) > 3:
                 time_and_username = message[1] + " " + message[2]
-                if username.startswith(message[2]):
+                if username.strip().startswith(message[2].strip()):
                     edited_message = ""
                     for word in message:
                         if message.index(word) > 2:
@@ -70,6 +70,7 @@ def get_input_from_the_user():
                         if messages[msg]["Message"].startswith(time_and_username):
                             message_id = msg
                     fb.put(f'Message/{message_id}/', 'Message', str(datetime.now().time())[:8] + username + "EDITED " + edited_message)
+                else: print("You can only edit your own messages.", username, message[2])
 
         else:
             Smessage = str(datetime.now().time())[:8] + username + message
