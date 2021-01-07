@@ -50,6 +50,8 @@ def get_input_from_the_user():
             message = message.replace("(y)", "👍")
         if "(no)" in message:
             message = message.replace("(no)", "👎")
+        if "(cryingwithlaughter)" in message:
+            message = message.replace("(cryingwithlaughter)", "😂")
 
         if message == "/clear":
             fb.delete('Message', '')
